@@ -6,29 +6,27 @@ require 'scraperwiki.php';
 require 'scraperwiki/simple_html_dom.php';
 //
 // // Read in a page
-$html = scraperwiki::scrape("http://foo.com");
+//$html = scraperwiki::scrape("http://foo.com");
+$html = scraperwiki::scrape("http://www.google.com/");
 //
 // // Find something on the page using css selectors
 $dom = new simple_html_dom();
 $dom->load($html);
-print_r($dom->find("table.list"));
-
-// Create DOM from URL or file
-$html = file_get_html('http://www.google.com/');
+//print_r($dom->find("table.list"));
 
 // Find all images
-foreach($html->find('img') as $element)
+foreach($dom->find('img') as $element)
        echo $element->src . '<br>';
 
 // Find all links
-foreach($html->find('a') as $element)
+foreach($dom->find('a') as $element)
        echo $element->href . '<br>'; 
 //
 // // Write out to the sqlite database using scraperwiki library
-scraperwiki::save_sqlite(array('name'), array('name' => 'susan', 'occupation' => 'software developer'));
+//scraperwiki::save_sqlite(array('name'), array('name' => 'susan', 'occupation' => 'software developer'));
 //
 // // An arbitrary query against the database
-scraperwiki::select("* from data where 'name'='peter'")
+//scraperwiki::select("* from data where 'name'='peter'")
 
 // You don't have to do things with the ScraperWiki library.
 // You can use whatever libraries you want: https://morph.io/documentation/php
