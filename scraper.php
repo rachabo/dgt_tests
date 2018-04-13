@@ -12,6 +12,17 @@ $html = scraperwiki::scrape("http://foo.com");
 $dom = new simple_html_dom();
 $dom->load($html);
 print_r($dom->find("table.list"));
+
+// Create DOM from URL or file
+$html = file_get_html('http://www.google.com/');
+
+// Find all images
+foreach($html->find('img') as $element)
+       echo $element->src . '<br>';
+
+// Find all links
+foreach($html->find('a') as $element)
+       echo $element->href . '<br>'; 
 //
 // // Write out to the sqlite database using scraperwiki library
 scraperwiki::save_sqlite(array('name'), array('name' => 'susan', 'occupation' => 'software developer'));
