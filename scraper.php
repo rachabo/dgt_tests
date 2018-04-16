@@ -16,7 +16,7 @@ $dom->load($html);
 
 // Find all images
 foreach($dom->find('h4[class=tit_not]') as $element)
-       echo $element->outertext . '<br>';
+       echo $element->innertext . '<br>';
 
 // Find all links
 //foreach($dom->find('a') as $element)
