@@ -15,12 +15,12 @@ $dom->load($html);
 //print_r($dom->find("table.list"));
 
 // Find all images
-foreach($dom->find('img') as $element)
-       echo $element->src . '<br>';
+foreach($dom->find('h4[class=tit_not]') as $element)
+       echo $element . '<br>';
 
 // Find all links
-foreach($dom->find('a') as $element)
-       echo $element->href . '<br>'; 
+//foreach($dom->find('a') as $element)
+       //echo $element->href . '<br>'; 
 //
 // // Write out to the sqlite database using scraperwiki library
 //scraperwiki::save_sqlite(array('name'), array('name' => 'susan', 'occupation' => 'software developer'));
