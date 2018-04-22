@@ -14,14 +14,14 @@ $dom = new simple_html_dom();
 $dom->load($html);
 
 
-
+$preguntas = array();
 //Todas los enlaces de los tests
 foreach($dom->find('ul li a') as $link)
 	       {
 		$pos = strpos($link->href, "/es/test/");
 
 		if ($pos !== false) {
-			//echo $link->href . '<br>';
+			////echo $link->href . '<br>';
 			$test=$link->href;
 			$dom2 = new simple_html_dom();
 			$html2=scraperwiki::scrape($servidor.$test);
@@ -31,43 +31,67 @@ foreach($dom->find('ul li a') as $link)
 
 
 			foreach($dom2->find('article.test') as $articulo)
+
 			{
+				$pregunta=array();
 				//Extraigo imagen de la pregunta
 				foreach($articulo->find('img') as $imagen)
-				echo "<B>".$imagen->src . '</B><br>';
+				//echo "<B>".$imagen->src . '</B><br>';
 	
-				echo "<img src='".$servidor.$imagen->src."'><br>";
+				//echo "<img src='".$servidor.$imagen->src."'><br>";
+				$pregunta["imagen"]=$servidor.$imagen->src;
 	
 				foreach($articulo->find('section.content_test') as $section)
 				{
 					//Opción correcta
 				       foreach($section->find('p span.opcion') as $correcta)
 				       {
-					     echo "Correcta:".$correcta->innertext . '<br>';
+					     //echo "Correcta:".$correcta->innertext . '<br>';
 				       }
 				       //Texto de la pregunta
-				       foreach($section->find('h4[class=tit_not]') as $pregunta)
+				       foreach($section->find('h4[class=tit_not]') as $preg)
 				       {
-					    echo "<B>".$pregunta->innertext . '</B><br>';
+					    //echo "<B>".$preg->innertext . '</B><br>';
+					    $pregunta["texto"]=trim(substr($preg->innertext,3));
 				       }
 				       //Todas las respuestas posibles
-				       foreach($section->find('li') as $respuesta)
+				       $respuestas=array();
+				       foreach($section->find('li') as $resp)
 				       {
-					     echo $respuesta->innertext . '<br>';
+					     	$respuesta=array();
+						$textoresp= explode("n> ",$resp->innertext);
+						$respuesta["respuesta"]=$textoresp[1];
+						//$respuesta["respuesta"]=$resp->innertext;
+						if (stripos($textoresp[0],$correcta->innertext."."))
+							$respuesta["correcta"]=true;
+						else
+							$respuesta["correcta"]=false;
+						array_push($respuestas, $respuesta);
+						//echo $resp->innertext . '<br>';
+
+
 				       }
+					$pregunta["respuestas"]=$respuestas;
 				       
 				}
+			array_push($preguntas, $pregunta);
 			}
 
 
 
 		}
 }
+
+//print_r(json_encode($preguntas));
+header('Content-Type: application/json');
+$json_string = json_encode($preguntas, JSON_PRETTY_PRINT);
+
+echo $json_string;
 // Find respuestas
 /*foreach($dom->find('section.content_test li') as $element)
-      echo $element->innertext . '<br>';
+      //echo $element->innertext . '<br>';
 */
-      //echo $element->href . '<br>'; 
+      ////echo $element->href . '<br>'; 
 //
 // // Write out to the sqlite database using scraperwiki library
 //scraperwiki::save_sqlite(array('name'), array('name' => 'susan', 'occupation' => 'software developer'));
