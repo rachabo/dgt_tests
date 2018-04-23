@@ -7090,7 +7090,12 @@ echo "<TR>";
 echo "</TR>";
 	foreach($pregunta->respuestas as $respuesta){
 		$idrespuesta=rand(10000000,99999999);
-		$SQL='INSERT INTO respuestas VALUES ('.$idrespuesta.',"'. $respuesta->respuesta.'",'.$respuesta->correcta.','.$id.')';
+		if ($respuesta->correcta)
+			$correcta="true";
+		else
+			$correcta="false";
+		$SQL='INSERT INTO respuestas VALUES ('.$idrespuesta.',"'. $respuesta->respuesta.'",'.$correcta.','.$id.')';
+		echo $SQL."<BR>";
 		mysqli_query($conn, $SQL);
 	}
 
